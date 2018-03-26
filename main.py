@@ -20,9 +20,10 @@ def run():
     data_model.append(dataobject.DataObject())
     gui.update()
     apilist.append(api_sl.SL_APIrequester(data_model[0]))
-    #sensor.startSensors()
-    
-    #get lists of apis and sensors
+
+    data_model.append(dataobject.DataObject())
+    gui.update()
+    apilist.append(api_kth.KTH_APIrequester(data_model[1]))
 
     #request data from each active API module
     for i in range(0, len(apilist)):
