@@ -11,8 +11,3 @@ class APIrequester:
     def request():
         print("requesting as base APIrequester")
         
-
-
-def startAPIs():
-    print("initializing APIs")
-    #get api keys

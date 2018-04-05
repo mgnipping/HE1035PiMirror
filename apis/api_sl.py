@@ -3,11 +3,6 @@ from .api import *
 
 config = configparser.ConfigParser()
 
-#trafiklab API
-
-
-#extends api_requester base class
-
 class SL_APIrequester(APIrequester):
     apikey = ""
     stationid = None
@@ -21,14 +16,10 @@ class SL_APIrequester(APIrequester):
         
         #get api key from file
         config.read('./apis/apikeys.ini')
-        print("config file sections: ")
-        print(len(config.sections()))
-        global apikey
-        apikey = str(config['APIkeys']['trafiklab1'] )
-        #apikey = config.get('APIkeys','trafiklab1')
+        #global apikey
+        self.apikey = str(config['APIkeys']['trafiklab1'])
 
     def request(self):
-        
         t = time.localtime()
         timearg = str(t.tm_hour)+":"+str(t.tm_min)
         print("timearg="+ timearg)
@@ -41,6 +32,9 @@ class SL_APIrequester(APIrequester):
             print("api data was fetched")
 
         #parse api data
-        self.model.setData(r.json().get("Departure"))    
-        
+        data = r.json().get("Departure")
+
         #update model with api data
+        self.model.setData(data, rows=self.max_items, columns=3)    
+        
+        

@@ -1,1 +1,1 @@
-__all__ = ["GUI"]
+__all__ = ["GUI", "GUI_module", "GUI_clock"]
