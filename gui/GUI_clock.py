@@ -1,5 +1,6 @@
 import time
 import gui
+#import Tkinter as tk
 import tkinter as tk
 
 class ModuleGUIClock(gui.GUI_module.ModuleGUI):

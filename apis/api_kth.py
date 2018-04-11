@@ -1,6 +1,6 @@
 from .api import *
 
-config = configparser.ConfigParser()
+config = cfparser.ConfigParser()
 
 class KTH_APIrequester(APIrequester):
 

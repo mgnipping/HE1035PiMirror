@@ -1,9 +1,9 @@
 import time
 from .api import *
 
-config = configparser.ConfigParser()
+config = cfparser.ConfigParser()
 
-class SL_APIrequester(APIrequester):
+class SL_APIrequester():
     apikey = ""
     stationid = None
     max_items = 5

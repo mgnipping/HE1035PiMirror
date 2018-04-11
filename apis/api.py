@@ -2,7 +2,8 @@
 
 import requests
 import json
-import configparser
+import configparser as cfparser
+#import Configparser
 
 class APIrequester:
     def __init__(self):
