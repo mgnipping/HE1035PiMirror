@@ -8,6 +8,7 @@ class SL_APIrequester():
     stationid = None
     max_items = 5
     model = None
+    dorun = 0
   
     def __init__(self, modelobj):
         print("init SL_APIrequester")
@@ -18,6 +19,7 @@ class SL_APIrequester():
         #get api key from file
         config.read('./apis/apikeys.ini')
         self.apikey = str(config['APIkeys']['trafiklab1'])
+
         #get max_journeys, station id
 
     def request(self):
@@ -45,6 +47,13 @@ class SL_APIrequester():
 
     def run(self):
         self.dorun = 1
+
+        #wait to make request at start of minute
+        t = time.localtime()
+        while t.tm_sec != 0:
+            time.sleep(1)
+            t = time.localtime()
+        
         while self.dorun == 1:
             #request new API data every minute
             self.request()
