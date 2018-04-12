@@ -40,10 +40,4 @@ class DataObject:
                 #print("New data [" + str(i)+"]["+str(j)+"]:" +str(newdata[i][j]))
                 self.data[i][j].set(str(newdata[i][j]))
         
-    
-    def getrows(self):
-        return self.data_rows
-    
-    def getcolumns(self):
-        return self.data_cols
         
