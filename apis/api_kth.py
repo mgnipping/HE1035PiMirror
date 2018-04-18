@@ -30,21 +30,17 @@ class KTH_APIrequester(APIrequester):
         print("requesting ical schedule")
         res = requests.get(self.url, allow_redirects=True)
         open(self.datafile, 'wb').write(res.content)
+        #try
         data = parse(self.datafile)
+        #catch error:log and return
         self.model.setData(data)
-        #----(just debug print)---
-        #print("upcoming calendar events: " + str(len(data)))
-        #for i in range(0, len(data)):
-        #    for j in range(0, len(data[i])):
-        #        print(data[i][j])
-        #-----------------------
 
     def run(self):
         self.dorun = 1
         while self.dorun == 1:
             self.request()
             print("going to sleep for"+str(self.update_interval)+"seconds")
-            time.sleep(60*60)
+            time.sleep(self.update_interval)
 
     def stop(self):
         self.dorun = 0
@@ -70,13 +66,11 @@ def formatEvent(veventobj):
       
 def parse(filename, max_items= 6, num_days=7):
     
-    #print("Attempting to parse ical file " + str(filename))
-
     cal = None
     cal = icalendar.Calendar.from_ical(open(filename, 'rb').read())
 
     if cal is None:
-        print("Error: unable to parse icalendar data file")
+        print("Error: unable to parse icalendar file")
         return
     
     #get all event objects

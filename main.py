@@ -37,6 +37,10 @@ def run():
     
     apilist.append(api_kth.KTH_APIrequester(data_model[1]))
 
+    data_model.append(dataobject.DataObject())
+    
+    apilist.append(api_smhi.SMHI_APIrequester(data_model[2]))
+
     #request data from each active API module
     for i in range(0, len(apilist)):
         apilist[i].request()
@@ -52,4 +56,5 @@ def stopthreads():
 
 run()
 print("returned from main run()")
+stopthreads()
 
