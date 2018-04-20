@@ -28,7 +28,7 @@ def run():
     mgui = GUI.MainGUI(data_model)
 
     getModules("example.ini")
-    
+
     data_model.append(dataobject.DataObject())
     
     apilist.append(api_sl.SL_APIrequester(data_model[0]))
@@ -40,6 +40,10 @@ def run():
     data_model.append(dataobject.DataObject())
     
     apilist.append(api_smhi.SMHI_APIrequester(data_model[2]))
+
+    data_model.append(dataobject.DataObject())
+    
+    apilist.append(temp_sensor.tempSensorReader(data_model[3]))
 
     #request data from each active API module
     for i in range(0, len(apilist)):

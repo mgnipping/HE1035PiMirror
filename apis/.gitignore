@@ -1,3 +1,4 @@
 apikeys.ini
 apiconfig.ini
 kth_ical_schedule.ics
+*.pyc

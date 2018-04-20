@@ -8,13 +8,13 @@ class DataObject:
     data = []
 
     def __init__(self):
-        print("init base DataObject")
+        pass
+        #print("init DataObject")
 
 
     def setDataSize(self, **kwargs):
-        
         for key, val in kwargs.items():
-            print('[%s] => [%s]' % (str(key), str(val)))
+            #print('[%s] => [%s]' % (str(key), str(val)))
             if key is 'columns':
                 self.data_cols = val
 

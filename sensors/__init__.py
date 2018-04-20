@@ -1,1 +1,1 @@
-__all__ = ["sensor"]
+__all__ = ["sensor", "temp_sensor"]
