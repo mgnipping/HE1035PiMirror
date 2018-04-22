@@ -2,13 +2,17 @@ import tkinter as tk
 
 
 class DataObject:
+    pos_row = None
+    pos_col = None
+    
     data_rows = 0
     data_cols = 0
 
     data = []
 
-    def __init__(self):
-        pass
+    def __init__(self, posy=None, posx=None):
+        self.pos_row = posy
+        self.pos_col = posx
         #print("init DataObject")
 
 

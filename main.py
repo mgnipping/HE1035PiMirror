@@ -29,19 +29,19 @@ def run():
 
     getModules("example.ini")
 
-    data_model.append(dataobject.DataObject())
+    data_model.append(dataobject.DataObject(0,2))
     
     apilist.append(api_sl.SL_APIrequester(data_model[0]))
 
-    data_model.append(dataobject.DataObject())
+    data_model.append(dataobject.DataObject(2,0))
     
     apilist.append(api_kth.KTH_APIrequester(data_model[1]))
 
-    data_model.append(dataobject.DataObject())
+    data_model.append(dataobject.DataObject(1,0))
     
     apilist.append(api_smhi.SMHI_APIrequester(data_model[2]))
 
-    data_model.append(dataobject.DataObject())
+    data_model.append(dataobject.DataObject(0,1))
     
     apilist.append(temp_sensor.tempSensorReader(data_model[3]))
 

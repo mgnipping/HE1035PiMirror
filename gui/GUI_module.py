@@ -17,7 +17,7 @@ class ModuleGUI(tk.Frame):
                 labels[i] = []
                 for j in range(0, model.data_cols):
                     labels[i].append(tk.Label(self, textvariable=model.data[i][j], fg="white", bg="black", font="Helvetica 14 bold"))
-                    labels[i][j].grid(row=i, column=j, padx=10)
+                    labels[i][j].grid(row=i, column=j, sticky=tk.W, padx=10)
                 
 
 

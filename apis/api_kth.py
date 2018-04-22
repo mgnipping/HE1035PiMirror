@@ -47,7 +47,7 @@ class KTH_APIrequester(APIrequester):
 
 def formatEvent(veventobj):
 
-    dateformat = '%Y-%m-%d'
+    dateformat = '%d/%m'
     timeformat = '%H:%M'
     lastrow = []
 

@@ -55,16 +55,20 @@ def formatData(forecast):
 
     row = []
 
-    datestr = forecast['validTime'][0:forecast['validTime'].index('T')]
+    #datestr = forecast['validTime'][0:forecast['validTime'].index('T')]
     timestr = forecast['validTime'][forecast['validTime'].index('T')+1:-4]
 
-    row.append(datestr)
+    #row.append(datestr)
     row.append(timestr)
 
     for i in forecast['parameters']:
-        if i['name'] is "t":
-            row.append(str(i['values'][0])+' '+u'\xb0'+'C')
-    
+        
+        name = str(i.get('name'))
+        if name is "t":
+            row.append(str(i['values'][0])+' '+u'\xb0'+'C')      
+        if "ws" in name:
+            row.append(str(i['values'][0])+" m/s")
+
     return row
 
 def parse(data, d_hours, max_items):
@@ -75,8 +79,6 @@ def parse(data, d_hours, max_items):
     if d is None:
             print("Unable to parse weather data")
             return
-   
-    print("Number of forecast entries: " + str(len(d)))
     
     table = []
 
@@ -86,6 +88,7 @@ def parse(data, d_hours, max_items):
         table.append(formatData(d[i]))
         i += d_hours
 
+    
     return table
 
     

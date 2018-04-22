@@ -1,4 +1,6 @@
 import time
+import datetime
+from dateutil.tz import tzlocal
 from .api import *
 
 config = cfparser.ConfigParser()
@@ -7,6 +9,7 @@ class SL_APIrequester():
     apikey = ""
     stationid = None
     max_items = 5
+    minutes_from_now = 3
     model = None
     dorun = 0
   
@@ -23,10 +26,13 @@ class SL_APIrequester():
         #get max_journeys, station id
 
     def request(self):
-        t = time.localtime()
+        
+        reqtime = datetime.datetime.now(tzlocal()) + datetime.timedelta(minutes = self.minutes_from_now)
+
+        #t = time.localtime()
         #right justify with '0' to ensure hour and min args have 2 digits
-        h = str(t.tm_hour).rjust(2, '0')
-        m = str(t.tm_min).rjust(2, '0')
+        h = str(reqtime.hour).rjust(2, '0')
+        m = str(reqtime.minute).rjust(2, '0')
         timearg = h+":"+m
         
         rstring = "https://api.resrobot.se/v2/departureBoard?key="+ self.apikey +"&id=740001178&time="+timearg+"&maxJourneys="+ str(self.max_items) +"&passlist=0&format=json"

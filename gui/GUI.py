@@ -28,7 +28,13 @@ class MainGUI(tk.Tk):
         for i in range(0, len(self.model_list)):
             mod = gui.GUI_module.ModuleGUI(self.main_frame, self.model_list[i])
             self.module_list.append(mod)
-            mod.grid(row=i+1, column=0, sticky=tk.W, padx=20, pady=20)
+            r = self.model_list[i].pos_row
+            c = self.model_list[i].pos_col
+            if r is None:
+                r=i+1
+            if c is None:
+                c=0 
+            mod.grid(row=r, column=c, sticky=tk.W, padx=20, pady=20)
 
         self.root.mainloop()
 
