@@ -12,7 +12,13 @@ class MainGUI(tk.Tk):
     
     def __init__(self, model):
         self.model_list = model
-        print("init GUI")
+        #print("init GUI")
+
+    def hideModule(self,index):
+        self.module_list[index].grid_remove()
+
+    def showModule(self,index):
+        self.module_list[index].grid()
 
     def start(self):
         print("Number of data modules:" + str(len(self.model_list)))

@@ -5,4 +5,4 @@ camera = picamera.PiCamera()
 
 def takePhoto():
     print("Taking photo...")
-    camera.capture ('photos\example.jpg')
+    camera.capture ('sensors/photos/example.jpg')

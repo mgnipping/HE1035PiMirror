@@ -27,6 +27,8 @@ def getModules(filename):
     
 def serialread():
     global serial
+    global mgui
+    
     serial = True
 
     while serial is True:
@@ -37,18 +39,36 @@ def serialread():
         print(cmd)
 
         if cmd[0] == 'buss':
-            print("sl-tabell: "+ cmd[1])
-            
-        elif cmd[0] == 'vader':
-            print("väder: "+ cmd[1])
+            if mgui != None:
+                if cmd[1] == '0':
+                    mgui.hideModule(0)
+                elif cmd[1] == '1':
+                    mgui.showModule(0)
+
         elif cmd[0] == 'schema':
-            print("schema: "+ cmd[1])
+            if mgui != None:
+                if cmd[1] == '0':
+                    mgui.hideModule(1)
+                elif cmd[1] == '1':
+                    mgui.showModule(1)
+
+        elif cmd[0] == 'vader':
+            if mgui != None:
+                if cmd[1] == '0':
+                    mgui.hideModule(2)
+                elif cmd[1] == '1':
+                    mgui.showModule(2)
+        elif cmd[0] == 'temp':
+            if mgui != None:
+                if cmd[1] == '0':
+                    mgui.hideModule(3)
+                elif cmd[1] == '1':
+                    mgui.showModule(3)
+
         elif cmd[0] == 'lights on':
             gpio.ledon()
-
         elif cmd[0] == 'lights off':
             gpio.ledoff()
-
         elif cmd[0] == 'photo':
             camera.takePhoto()
         
