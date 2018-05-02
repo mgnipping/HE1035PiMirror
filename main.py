@@ -6,6 +6,7 @@ import time
 import configparser as cfparser
 import threading
 import serialreader
+import gpio
 
 config = cfparser.ConfigParser()
 
@@ -42,6 +43,15 @@ def serialread():
             print("väder: "+ cmd[1])
         elif cmd[0] == 'schema':
             print("schema: "+ cmd[1])
+        elif cmd[0] == 'lights on':
+            gpio.ledon()
+
+        elif cmd[0] == 'lights off':
+            gpio.ledoff()
+
+        elif cmd[0] == 'photo':
+            camera.takePhoto()
+        
         elif cmd[0]=='network':
             if str(cmd[1]).find(','):
                 params = str(cmd[1]).split(",")
@@ -79,6 +89,8 @@ def run():
     BTcomthread.start()
     PIRthread = threading.Thread(target=pir_wakeup.run)
     PIRthread.start()
+    MagSensorthread = threading.Thread(target=gpio.runMagneticSensor)
+    MagSensorthread.start()
     
     mgui.start()
 
@@ -91,5 +103,6 @@ run()
 print("returned from main run()")
 serial = False
 pir_wakeup.stop()
+gpio.stopMagneticSensor()
 stopthreads()
 

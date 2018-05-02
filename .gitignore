@@ -1,3 +1,4 @@
 **/__pycache__
 **/*.pyc
+**/*.jpg
 **/kth_ical_schedule.ics
