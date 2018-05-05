@@ -14,7 +14,6 @@ class SL_APIrequester():
     dorun = 0
   
     def __init__(self, modelobj):
-        print("init SL_APIrequester")
         super().__init__()
         self.model = modelobj
         self.model.setDataSize(rows=self.max_items, columns=3)
@@ -38,18 +37,19 @@ class SL_APIrequester():
         rstring = "https://api.resrobot.se/v2/departureBoard?key="+ self.apikey +"&id=740001178&time="+timearg+"&maxJourneys="+ str(self.max_items) +"&passlist=0&format=json"
         r = None
         r = requests.get(rstring)
-        print("Requesting data from Trafiklab API... timearg="+ timearg)
-        if r != None:
-            print("API data was fetched")
+        #print("Requesting data from Trafiklab API... timearg="+ timearg)
+        #if r != None:
+            #print("API data was fetched")
 
         #parse api data
         data = parse(r)
 
         if data is not None:
             #update model with api data
-            self.model.setData(data)
-        else:
-            print("Failed to parse API data")
+            try:
+                self.model.setData(data)
+            except Exception:
+                pass
 
     def run(self):
         self.dorun = 1
@@ -71,11 +71,10 @@ class SL_APIrequester():
 
 
 def parse(data):
-
-    d = data.json().get("Departure")
-   
-
-    if d is None:
+    try:
+        d = data.json().get("Departure")
+    except Exception:
+        print("Failed to parse API data")
         return None
 
     table = [None] * len(d)

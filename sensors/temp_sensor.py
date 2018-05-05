@@ -37,8 +37,12 @@ class tempSensorReader():
 
             
             data = [[str(temp_string[0:2]+' '+u'\xb0'+'C')]]
-            print(data)
-            self.model.setData(data)
+
+            try:
+                self.model.setData(data)
+            except Exception:
+                print("failed to set temp data")
+
 
     def run(self):
         self.dorun = 1

@@ -23,17 +23,24 @@ class KTH_APIrequester(APIrequester):
         self.model.setDataSize(rows=self.max_items, columns=4)
         
         self.datafile = './apis/kth_ical_schedule.ics'
-        print("init KTH_APIrequester")
-
+        
     def request(self):
         #get and store icalendar file
-        print("requesting ical schedule")
+        
         res = requests.get(self.url, allow_redirects=True)
-        open(self.datafile, 'wb').write(res.content)
-        #try
+
+        try:
+            open(self.datafile, 'wb').write(res.content)
+        except Exception:
+            print("Failed to save calendar data")
+
         data = parse(self.datafile)
-        #catch error:log and return
-        self.model.setData(data)
+
+        if data is not None:
+            try:
+                self.model.setData(data)
+            except Exception:
+                pass
 
     def run(self):
         self.dorun = 1
@@ -67,16 +74,22 @@ def formatEvent(veventobj):
 def parse(filename, max_items= 6, num_days=7):
     
     cal = None
-    cal = icalendar.Calendar.from_ical(open(filename, 'rb').read())
 
-    if cal is None:
-        print("Error: unable to parse icalendar file")
-        return
+    try:
+        cal = icalendar.Calendar.from_ical(open(filename, 'rb').read())
+    except Exception:
+        print("Error: unable to open icalendar file")
+        return None
     
     #get all event objects
-    events = cal.walk('vevent')
+    try:
+        events = cal.walk('vevent')
+    except Exception:
+        print("Error: unable to parse icalendar data")
+        return None
+
     table = []
-    print("Number of fetched events: " + str(len(events)))
+    
 
     #get current time (timezone aware) and set delta for timespan to search from now
     curtime = datetime.datetime.now(tzlocal())

@@ -14,7 +14,6 @@ class SMHI_APIrequester(APIrequester):
     requeststr = None
   
     def __init__(self, modelobj):
-        print("init SMHI_APIrequester")
         super().__init__()
         self.model = modelobj
         self.model.setDataSize(rows=self.max_items, columns=3)
@@ -27,18 +26,21 @@ class SMHI_APIrequester(APIrequester):
         self.requeststr += "/geotype/point/lon/"+str(config['API_SMHI']['long'])+"/lat/"+str(config['API_SMHI']['lat'])+"/data.json"
 
     def request(self):
-        print("requesting weather forecast...")
+        #print("requesting weather forecast...")
         res = None
         res = requests.get(self.requeststr, allow_redirects=True)
 
         if res is None:
             print("Unable to fetch weather data")
             return
-        #try
-        data = parse(res, self.delta_hours, self.max_items)
-        #catch error: log and return
-        
-        self.model.setData(data)
+    
+        data = parse(res, self.delta_hours, self.max_items)     
+
+        if data is not None:
+            try:
+                self.model.setData(data)
+            except Exception:
+                pass
 
     def run(self):
         self.dorun = 1
@@ -74,20 +76,19 @@ def formatData(forecast):
 def parse(data, d_hours, max_items):
 
     d = None
-    d = data.json().get("timeSeries")
-
-    if d is None:
-            print("Unable to parse weather data")
-            return
+    try:
+        d = data.json().get("timeSeries")
+    except Exception:
+        print("Unable to parse weather data")
+        return None
     
     table = []
 
-    i = 1
+    i = 2
     while i <= len(d) and len(table)<max_items:
 
         table.append(formatData(d[i]))
         i += d_hours
-
     
     return table
 

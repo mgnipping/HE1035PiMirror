@@ -8,7 +8,8 @@ import configparser as cfparser
 
 class APIrequester(ABC):
     def __init__(self):
-        print("init base APIrequester")
+        #print("init base APIrequester")
+        pass
 
     @abstractmethod
     def request():pass
