@@ -7,6 +7,7 @@ import configparser as cfparser
 import threading
 import serialreader
 import gpio
+import wificonfig
 
 config = cfparser.ConfigParser()
 
@@ -15,15 +16,7 @@ modules = []
 data_model = []
 threads = []
 serial = False
-
-def getModules(filename):
-    print("initialize modules...")
-    #open file for reading
-    #append to list
-
-#def storeModules(filename):
-    #open file for writing
-    #write all modules in list
+isConnected = False
     
 def serialread():
     global serial
@@ -42,28 +35,44 @@ def serialread():
             if mgui != None:
                 if cmd[1] == '0':
                     mgui.hideModule(0)
+                    modules[0].inactivate()
                 elif cmd[1] == '1':
                     mgui.showModule(0)
+                    modules[0].activate()
 
         elif cmd[0] == 'schema':
             if mgui != None:
                 if cmd[1] == '0':
                     mgui.hideModule(1)
+                    modules[1].inactivate()
                 elif cmd[1] == '1':
                     mgui.showModule(1)
+                    modules[1].activate()
 
         elif cmd[0] == 'vader':
             if mgui != None:
                 if cmd[1] == '0':
                     mgui.hideModule(2)
+                    modules[2].inactivate()
                 elif cmd[1] == '1':
                     mgui.showModule(2)
+                    modules[0].activate()
         elif cmd[0] == 'temp':
             if mgui != None:
                 if cmd[1] == '0':
                     mgui.hideModule(3)
+                    modules[3].inactivate()
                 elif cmd[1] == '1':
                     mgui.showModule(3)
+                    modules[3].activate()
+        elif cmd[0] == 'vaderut':
+            if mgui != None:
+                if cmd[1] == '0':
+                    mgui.hideModule(4)
+                    modules[4].inactivate()
+                elif cmd[1] == '1':
+                    mgui.showModule(4)
+                    modules[4].inactivate()
 
         elif cmd[0] == 'lights on':
             gpio.ledon()
@@ -75,12 +84,15 @@ def serialread():
         elif cmd[0]=='network':
             if str(cmd[1]).find(','):
                 params = str(cmd[1]).split(",")
+                ssid = params[0].strip()
+                pwd = params[1].strip()
+                global isConnected
+                isConnected = wificonfig.configure(ssid, pwd)
+                print(isConnected)
 
 def run():
     global mgui
     mgui = GUI.MainGUI(data_model)
-
-    getModules("example.ini")
 
     data_model.append(dataobject.DataObject(1,1))
     
@@ -100,7 +112,7 @@ def run():
 
     data_model.append(dataobject.DataObject(1,0))
     
-    modules.append(weatherstation.WeatherStation(data_model[4]))
+    modules.append(weatherstation.WeatherStation(data_model[4], True, wificonfig.current_ssid, wificonfig.getIP()))
 
     #request data from each active API module
     for i in range(0, len(modules)):
@@ -109,12 +121,10 @@ def run():
         threads[i].setDaemon(True)
         threads[i].start()
 
-    BTcomthread = threading.Thread(target=serialread)
-    BTcomthread.start()
+    pir_wakeup.set(modules)
     PIRthread = threading.Thread(target=pir_wakeup.run)
-    PIRthread.start()
-    MagSensorthread = threading.Thread(target=gpio.runMagneticSensor)
-    MagSensorthread.start()
+    PIRthread.setDaemon(True)
+    #PIRthread.start()
     
     mgui.start()
 
@@ -123,7 +133,18 @@ def stopthreads():
     for i in range(0, len(modules)):
         modules[i].stop()
 
+BTcomthread = threading.Thread(target=serialread)
+BTcomthread.start()
+
+MagSensorthread = threading.Thread(target=gpio.runMagneticSensor)
+MagSensorthread.start()
+
+print("waiting for wifi data...")
+while isConnected is False:
+    time.sleep(1)
+
 run()
+
 print("returned from main run()")
 serial = False
 pir_wakeup.stop()

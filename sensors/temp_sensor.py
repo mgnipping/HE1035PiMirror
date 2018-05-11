@@ -10,12 +10,14 @@ os.system('modprobe w1-therm')
 
 class tempSensorReader():
 
-    dorun = 0
+    dorun = False
     device_file = None
+    update = None
 
-    def __init__(self, modelobj):
+    def __init__(self, modelobj, active=True):
         self.model = modelobj
         self.model.setDataSize(rows=1, columns=1)
+        self.update = active
         self.device_file = '/sys/bus/w1/devices/28-03168b14e3ff/w1_slave'
 
     def read_temp_raw(self):
@@ -33,8 +35,6 @@ class tempSensorReader():
 
         if equals_pos != -1:
             temp_string = lines[1][equals_pos+2:]
-            #temp_c = float(temp_string) / 1000.0
-
             
             data = [[str(temp_string[0:2]+' '+u'\xb0'+'C')]]
 
@@ -45,10 +45,16 @@ class tempSensorReader():
 
 
     def run(self):
-        self.dorun = 1
-        while self.dorun==1:
-            self.request()
+        self.dorun = True
+        while self.dorun==True:
+            if self.update==True:
+                self.request()
             time.sleep(60)
+    def activate(self):
+        self.update = True
+        self.request()
+    def inactivate(self):
+        self.update = False    
 
     def stop(self):
         self.dorun = 0

@@ -12,11 +12,16 @@ class APIrequester(ABC):
         pass
 
     @abstractmethod
-    def request():pass
+    def request(self):pass
 
     @abstractmethod
     def run(self):pass
+
+    @abstractmethod
+    def activate(self):pass
+    @abstractmethod
+    def inactivate(self):pass
     
     @abstractmethod
-    def stop():pass
+    def stop(self):pass
         

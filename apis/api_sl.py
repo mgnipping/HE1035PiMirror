@@ -11,13 +11,14 @@ class SL_APIrequester():
     max_items = 5
     minutes_from_now = 3
     model = None
-    dorun = 0
+    dorun = False
+    update = None
   
-    def __init__(self, modelobj):
+    def __init__(self, modelobj, active=True):
         super().__init__()
         self.model = modelobj
         self.model.setDataSize(rows=self.max_items, columns=3)
-        
+        self.update = active
         #get api key from file
         config.read('./apis/apikeys.ini')
         self.apikey = str(config['APIkeys']['trafiklab1'])
@@ -37,9 +38,6 @@ class SL_APIrequester():
         rstring = "https://api.resrobot.se/v2/departureBoard?key="+ self.apikey +"&id=740001178&time="+timearg+"&maxJourneys="+ str(self.max_items) +"&passlist=0&format=json"
         r = None
         r = requests.get(rstring)
-        #print("Requesting data from Trafiklab API... timearg="+ timearg)
-        #if r != None:
-            #print("API data was fetched")
 
         #parse api data
         data = parse(r)
@@ -52,7 +50,7 @@ class SL_APIrequester():
                 pass
 
     def run(self):
-        self.dorun = 1
+        self.dorun = True
 
         #wait to make request at start of minute
         t = time.localtime()
@@ -60,13 +58,20 @@ class SL_APIrequester():
             time.sleep(1)
             t = time.localtime()
         
-        while self.dorun == 1:
-            #request new API data every minute
-            self.request()
+        while self.dorun == True:
+            if self.update == True:
+                #request new API data every minute
+                self.request()
             time.sleep(60)
             
+    def activate(self):
+        self.update = True
+        self.request()
+    def inactivate(self):
+        self.update = False
+
     def stop(self):
-        self.dorun = 0
+        self.dorun = False
 
 
 

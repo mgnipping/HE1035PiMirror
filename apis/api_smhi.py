@@ -12,12 +12,13 @@ class SMHI_APIrequester(APIrequester):
     delta_hours = 4
     model = None
     requeststr = None
+    update = None
   
-    def __init__(self, modelobj):
+    def __init__(self, modelobj, active = True):
         super().__init__()
         self.model = modelobj
         self.model.setDataSize(rows=self.max_items, columns=3)
-
+        self.update = active
         config.read('./apis/apiconfig.ini')
 
         #make request string
@@ -46,8 +47,16 @@ class SMHI_APIrequester(APIrequester):
         self.dorun = 1
 
         while self.dorun == 1:
-            self.request()
-            time.sleep(60*60)
+            if self.update ==True:
+                self.request()
+            #sleep for 15 min
+            time.sleep(15*60)
+
+    def activate(self):
+        self.update = True
+        self.request()
+    def inactivate(self):
+        self.update = False   
 
     def stop(self):
         self.dorun = 0
