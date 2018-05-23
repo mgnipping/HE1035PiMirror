@@ -82,17 +82,22 @@ def formatEvent(veventobj):
     summary = summary[0:summary.find('-')]+'- '+course+'\n'+summary[summary.find('-')+1:summary.find('(')]
     lastrow.append(summary)
 
-    location = str(veventobj['LOCATION'])
+    try: 
+        location = str(veventobj['LOCATION'])
 
-    #put linebreak at 1st comma in second half of string
-    i = int(len(location)//2)-1
-    half2 = location[i:]
-    j = half2.find(',')
-    if j!=-1:
-        location = location[0:i]+half2[0:j]+'\n'+half2[j+2:]
+        print(location)
 
-    #add location to data
-    lastrow.append(location)
+        #put linebreak at 1st comma in second half of string
+        i = int(len(location)//2)-1
+        half2 = location[i:]
+        j = half2.find(',')
+        if j!=-1:
+            location = location[0:i]+half2[0:j]+'\n'+half2[j+2:]
+
+        #add location to data
+        lastrow.append(location)
+    except Exception:
+        lastrow.append("")
 
     return lastrow
       

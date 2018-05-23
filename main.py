@@ -16,7 +16,6 @@ modules = []
 data_model = []
 threads = []
 serial = False
-isConnected = False
     
 def serialread():
     global serial
@@ -112,7 +111,7 @@ def run():
 
     data_model.append(dataobject.DataObject(1,0))
     
-    modules.append(weatherstation.WeatherStation(data_model[4], True, wificonfig.current_ssid, wificonfig.getIP()))
+    modules.append(weatherstation.WeatherStation(data_model[4], True, wificonfig.current_ssid, wificonfig.current_ip))
 
     #request data from each active API module
     for i in range(0, len(modules)):
@@ -124,7 +123,7 @@ def run():
     pir_wakeup.set(modules)
     PIRthread = threading.Thread(target=pir_wakeup.run)
     PIRthread.setDaemon(True)
-    #PIRthread.start()
+    PIRthread.start()
     
     mgui.start()
 
@@ -134,13 +133,19 @@ def stopthreads():
         modules[i].stop()
 
 BTcomthread = threading.Thread(target=serialread)
+BTcomthread.setDaemon(True)
 BTcomthread.start()
 
 MagSensorthread = threading.Thread(target=gpio.runMagneticSensor)
+MagSensorthread.setDaemon(True)
 MagSensorthread.start()
 
-print("waiting for wifi data...")
-while isConnected is False:
+print(wificonfig.getSSID())
+print(wificonfig.current_ip)
+
+if wificonfig.isConnected() is False:
+    print("waiting for wifi data...")
+while wificonfig.isConnected() is False:
     time.sleep(1)
 
 run()

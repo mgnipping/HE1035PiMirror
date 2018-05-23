@@ -61,9 +61,13 @@ class WeatherStation():
             wspeed= wspeed[0:-1]+'.'+wspeed[-1:]
         
             data.append(['temp', temp, str(u'\xb0'+'C')])
-            data.append(['wind', wspeed, 'm/s'])
-            data.append(['hum.', str(config['values']['h']), '%'])
-            data.append(['light', str(config['values']['l']), ' '])
+            data.append(['vind', wspeed, 'm/s'])
+            data.append(['fukt', str(config['values']['h']), '%'])
+
+            light =  int(config['values']['l'])
+            light_p =int(light/1024 * 100)
+
+            data.append(['ljus', str(light_p), '%'])
         except Exception:
             print("Failed to read weather data from file")
 
